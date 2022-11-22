@@ -1,0 +1,41 @@
+﻿@model List<Pizza>
+
+<div class="container">
+    <div class="text-center">
+        <h1 class="display-4">Pizza Buona</h1>
+        <h4>Miglior pizzeria del Mondo</h4>
+        <div class="py-5"></div>
+
+        @if(Model.Count() < 1){
+            <h4>Non ci sono pizze nel database</h4>
+        } else {
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                @foreach (Pizza pizza in Model)
+                {
+                    <div class="col">
+                        <div class="card">
+                            <img src="@pizza.Image" class="card-img-top"
+                         alt="@pizza.Name" />
+                            <div class="card-body">
+                                <h5 class="card-title">@pizza.Name</h5>
+                                <p class="card-text">
+                                    @pizza.Description
+                                </p>
+                                <p class="card-text">
+                                    Prezzo: @pizza.Price €
+                                </p>
+                                <div>
+                                    <a class="btn btn-small btn-primary" href="@Url.Action("Detail", new {id = pizza.Id})" class="text-end">Dettagli</a>
+                                    <a class="btn btn-small btn-info" href="@Url.Action("Update", new {id = pizza.Id})" class="text-end">Modifica</a>
+                                    <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@pizza.Id" method="post" class="d-inline-block">
+                                        <input type="submit" class="btn btn-small btn-danger" value="Elimina">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
