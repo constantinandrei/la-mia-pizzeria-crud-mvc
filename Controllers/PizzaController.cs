@@ -18,12 +18,20 @@ namespace la_mia_pizzeria_static.Controllers
         {
             db = new PizzaDbContext();
         }
-            public IActionResult Index()
+        public IActionResult Index()
         {
            
             List<Pizza> Pizze = db.Pizzas.Include(p => p.Category).ToList();
             ViewData["Title"] = "Todi Pizza";
             return View(Pizze);
+        }
+        // filtro per pizze con categoria
+        public IActionResult CategoryFilter(int categoryId)
+        {
+
+            List<Pizza> Pizze = db.Pizzas.Where(p => p.CategoryId == categoryId).Include(p => p.Category).ToList();
+            ViewData["Title"] = "Todi Pizza";
+            return View("Index", Pizze);
         }
 
         public IActionResult Detail(int id)
