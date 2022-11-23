@@ -1,6 +1,7 @@
 ﻿using la_mia_pizzeria_static.Data;
 using la_mia_pizzeria_static.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace la_mia_pizzeria_static.Controllers
 {
@@ -70,9 +71,13 @@ namespace la_mia_pizzeria_static.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            Category category = db.Categories.Where(c => c.Id == id).FirstOrDefault();
+            Category category = db.Categories.Where(c => c.Id == id).Include(c => c.Pizzas).FirstOrDefault();
             if (category == null)
                 return NotFound();
+            if (category.Pizzas.Count() > 0)
+            {
+                return View("ImpossibleDelete");
+            }
             db.Categories.Remove(category);
             db.SaveChanges();
             return RedirectToAction("Index");
