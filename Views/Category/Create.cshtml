@@ -1,0 +1,19 @@
+﻿@model Category
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col col-md-8">
+            <form asp-controller="Category" asp-action="Create" method="post">
+
+                <div class="mb-3">
+                    <strong>Titolo:</strong>
+                    <input asp-for="Name" class="d-block w-100" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="text-end">
+                    <input type="submit" class="btn btn-small btn-success" value="Salva">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -68,13 +68,12 @@ namespace la_mia_pizzeria_static.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Update(int id, PizzaForm formData)
         {
+            formData.Pizza.Id = id;
             if (!ModelState.IsValid)
             {
                 formData.Categories = db.Categories.ToList();
                 return View(formData);
             }
-
-            formData.Pizza.Id = id;
             db.Pizzas.Update(formData.Pizza);
             db.SaveChanges();
 
