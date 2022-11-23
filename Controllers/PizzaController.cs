@@ -57,31 +57,25 @@ namespace la_mia_pizzeria_static.Controllers
 
         public IActionResult Update(int id)
         {
-            Pizza pizza = db.Pizzas.Where(p => p.Id == id).FirstOrDefault();
-            if (pizza == null)
+            PizzaForm formData = new PizzaForm();
+            formData.Pizza = db.Pizzas.Where(p => p.Id == id).FirstOrDefault();
+            if (formData.Pizza == null)
                 return NotFound();
-            return View(pizza);
+            formData.Categories = db.Categories.ToList();
+            return View(formData);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(int id, Pizza data)
+        public IActionResult Update(int id, PizzaForm formData)
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                formData.Categories = db.Categories.ToList();
+                return View(formData);
             }
 
-            Pizza pizza = db.Pizzas.Where(p => p.Id == id).FirstOrDefault();
-
-            if (pizza == null)
-            {
-                return NotFound();
-            }
-
-            pizza.Name = data.Name;
-            pizza.Description = data.Description;
-            pizza.Image = data.Image;
-            pizza.Price = data.Price;
+            formData.Pizza.Id = id;
+            db.Pizzas.Update(formData.Pizza);
             db.SaveChanges();
 
             return RedirectToAction("Index");
