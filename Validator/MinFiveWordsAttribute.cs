@@ -8,7 +8,7 @@ namespace il_mio_primo_blog.Validator
         {
             string fieldValue = (string)value;
 
-            if (fieldValue.Trim().Count(c => c == ' ') < 4)
+            if (fieldValue != null && fieldValue.Trim().Count(c => c == ' ') < 4)
             {
                 return new ValidationResult("Il campo deve contenere almeno cinque parole");
             }

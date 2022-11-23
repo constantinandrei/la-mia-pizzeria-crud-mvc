@@ -1,6 +1,8 @@
 ﻿using la_mia_pizzeria_static.Data;
 using la_mia_pizzeria_static.Models;
+using la_mia_pizzeria_static.Models.Form;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.SqlServer.Server;
 using System.Data;
@@ -18,31 +20,36 @@ namespace la_mia_pizzeria_static.Controllers
         }
             public IActionResult Index()
         {
-            List<Pizza> Pizze = db.Pizzas.ToList();
+           
+            List<Pizza> Pizze = db.Pizzas.Include(p => p.Category).ToList();
             ViewData["Title"] = "Todi Pizza";
             return View(Pizze);
         }
 
         public IActionResult Detail(int id)
         {
-            Pizza pizza = db.Pizzas.Where(p => p.Id == id).FirstOrDefault();
+            Pizza pizza = db.Pizzas.Where(p => p.Id == id).Include(p => p.Category).FirstOrDefault();
             ViewData["Title"] = "Todi Pizza | " + pizza.Name;
             return View(pizza);
         }
         public IActionResult Create()
         {
-            return View();
+            PizzaForm formData = new PizzaForm();
+            formData.Pizza = new Pizza();
+            formData.Categories = db.Categories.ToList();
+            return View(formData);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Pizza pizza)
+        public IActionResult Create(PizzaForm formData)
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                formData.Categories = db.Categories.ToList();
+                return View(formData);
             }
 
-            db.Pizzas.Add(pizza);
+            db.Pizzas.Add(formData.Pizza);
             db.SaveChanges();
 
             return RedirectToAction("Index");
