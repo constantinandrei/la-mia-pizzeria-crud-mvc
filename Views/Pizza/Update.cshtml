@@ -29,10 +29,6 @@
                 <div class="mb-3">
                     <strong>Categoria:</strong>
                     <select asp-for="Pizza.CategoryId" class="d-block w-100">
-                        @if (Model.Pizza.Category == null)
-                        {
-                            <option value="" selected>Selezionare una categoria</option>
-                        }
                         @foreach (Category category in Model.Categories)
                         {
                             @if (Model.Pizza.CategoryId == category.Id)
@@ -44,6 +40,15 @@
                                 <option value="@category.Id">@category.Name</option>
                             }
                         }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <strong>Ingredienti:</strong>
+                    <select asp-for="SelectedIngredients"
+                            asp-items="@Model.Ingredients"
+                            multiple="multiple"
+                            size="10"
+                            class="form-control mb-2 mr-sm-2 ml-sm-3 leftList">
                     </select>
                 </div>
                 <div class="text-end">
