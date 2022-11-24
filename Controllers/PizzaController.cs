@@ -2,6 +2,7 @@
 using la_mia_pizzeria_static.Models;
 using la_mia_pizzeria_static.Models.Form;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.SqlServer.Server;
@@ -45,6 +46,12 @@ namespace la_mia_pizzeria_static.Controllers
             PizzaForm formData = new PizzaForm();
             formData.Pizza = new Pizza();
             formData.Categories = db.Categories.ToList();
+            formData.Ingredients = new List<SelectListItem>();
+            List<Ingredient> IngredientsList = db.Ingredients.ToList();
+            foreach(Ingredient ingredient in IngredientsList)
+            {
+                formData.Ingredients.Add(new SelectListItem(ingredient.Name, ingredient.Id.ToString()));
+            }
             return View(formData);
         }
         [HttpPost]
