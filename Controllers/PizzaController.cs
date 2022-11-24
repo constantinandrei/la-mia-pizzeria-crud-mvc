@@ -112,16 +112,20 @@ namespace la_mia_pizzeria_static.Controllers
                 }
                 return View(formData);
             }
-            db.Pizzas.Update(formData.Pizza);
-
             Pizza pizza = db.Pizzas.Include(p => p.Ingredients).FirstOrDefault(p => p.Id == id);
+            pizza.Name = formData.Pizza.Name;
+            pizza.Image = formData.Pizza.Image;
+            pizza.Price = formData.Pizza.Price;
+            pizza.Description = formData.Pizza.Description;
+            pizza.CategoryId = formData.Pizza.CategoryId;
             pizza.Ingredients.Clear();
-            formData.Pizza.Ingredients = new List<Ingredient>();
+            ;
             if (formData.SelectedIngredients != null)
             {
                 foreach (int ingredientId in formData.SelectedIngredients)
                 {
-                    formData.Pizza.Ingredients.Add(db.Ingredients.Where(i => i.Id == ingredientId).FirstOrDefault());
+                    pizza.Ingredients.Add(db.Ingredients.Where(i => i.Id == ingredientId).FirstOrDefault());
+                    
                 }
             }
             
