@@ -61,9 +61,19 @@ namespace la_mia_pizzeria_static.Controllers
             if (!ModelState.IsValid)
             {
                 formData.Categories = db.Categories.ToList();
+                formData.Ingredients = new List<SelectListItem>();
+                List<Ingredient> IngredientsList = db.Ingredients.ToList();
+                foreach (Ingredient ingredient in IngredientsList)
+                {
+                    formData.Ingredients.Add(new SelectListItem(ingredient.Name, ingredient.Id.ToString()));
+                }
                 return View(formData);
             }
-
+            formData.Pizza.Ingredients = new List<Ingredient>();
+            foreach(int ingredientId in formData.SelectedIngredients)
+            {
+                formData.Pizza.Ingredients.Add(db.Ingredients.Where(i => i.Id == ingredientId).FirstOrDefault());
+            }
             db.Pizzas.Add(formData.Pizza);
             db.SaveChanges();
 
