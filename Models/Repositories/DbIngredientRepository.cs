@@ -4,7 +4,7 @@ using Microsoft.SqlServer.Server;
 
 namespace la_mia_pizzeria_static.Models.Repositories
 {
-    public class DbIngredientRepository
+    public class DbIngredientRepository : IDbIngredientRepository
     {
         private PizzaDbContext db;
         public DbIngredientRepository()
@@ -14,7 +14,7 @@ namespace la_mia_pizzeria_static.Models.Repositories
 
         public List<Ingredient> Get()
         {
-           return db.Ingredients.ToList();
+            return db.Ingredients.ToList();
         }
 
         public Ingredient Get(int id)

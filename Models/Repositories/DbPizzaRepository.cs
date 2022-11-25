@@ -6,7 +6,7 @@ using Microsoft.SqlServer.Server;
 
 namespace la_mia_pizzeria_static.Models.Repositories
 {
-    public class DbPizzaRepository
+    public class DbPizzaRepository : IDbPizzaRepository
     {
         private PizzaDbContext db;
         private DbIngredientRepository ingredientRepository;
@@ -53,7 +53,7 @@ namespace la_mia_pizzeria_static.Models.Repositories
         {
             formData.Categories = categoryRepository.Get();
             formData.Ingredients = new List<SelectListItem>();
-            
+
 
             return formData;
         }
@@ -92,7 +92,7 @@ namespace la_mia_pizzeria_static.Models.Repositories
             pizza.Description = updatedPizza.Description;
             pizza.CategoryId = updatedPizza.CategoryId;
             if (pizza.Ingredients != null)
-                   pizza.Ingredients.Clear();
+                pizza.Ingredients.Clear();
             ;
             if (selectedIngredients != null)
             {
