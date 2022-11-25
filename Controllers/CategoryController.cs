@@ -1,5 +1,6 @@
 ﻿using la_mia_pizzeria_static.Data;
 using la_mia_pizzeria_static.Models;
+using la_mia_pizzeria_static.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,23 +8,23 @@ namespace la_mia_pizzeria_static.Controllers
 {
     public class CategoryController : Controller
     {
-        private PizzaDbContext db;
+        private DbCategoryRepository categoryRepository;
 
         public CategoryController()
         {
-            db = PizzaDbContext.GetInstance;
+          categoryRepository = new DbCategoryRepository();
         }
         public IActionResult Index()
         {
             ViewData["Title"] = "Categorie";
-            List<Category> categories = db.Categories.ToList();
+            List<Category> categories = categoryRepository.Get();
             return View(categories);
         }
 
         public IActionResult Detail(int id)
         {
             ViewData["Title"] = "Categorie";
-            Category category = db.Categories.Where(c => c.Id == id).FirstOrDefault();
+            Category category = categoryRepository.Get(id);
             if (category == null)
                 return NotFound();
             return View(category);
@@ -43,16 +44,14 @@ namespace la_mia_pizzeria_static.Controllers
             {
                 return View(category);
             }
-            db.Categories.Add(category);
-            db.SaveChanges();
+            categoryRepository.Create(category);
             return RedirectToAction("Index");
         }
         public IActionResult Update(int id)
         {
-            Category category = db.Categories.Where(c => c.Id == id).FirstOrDefault();
-            if (category == null)
+            if (!categoryRepository.Exists(id))
                 return NotFound();
-            return View(category);
+            return View(categoryRepository.Get(id));
         }
 
         [HttpPost]
@@ -62,8 +61,7 @@ namespace la_mia_pizzeria_static.Controllers
             category.Id = id;
             if (!ModelState.IsValid)
                 return View(category);
-            db.Categories.Update(category);
-            db.SaveChanges();
+            categoryRepository.Update(category);
             return RedirectToAction("Index");
         }
 
@@ -71,15 +69,13 @@ namespace la_mia_pizzeria_static.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            Category category = db.Categories.Where(c => c.Id == id).Include(c => c.Pizzas).FirstOrDefault();
-            if (category == null)
+            if (!categoryRepository.Exists(id))
                 return NotFound();
-            if (category.Pizzas.Count() > 0)
+            if (categoryRepository.HasConstraint(id))
             {
                 return View("ImpossibleDelete");
             }
-            db.Categories.Remove(category);
-            db.SaveChanges();
+            categoryRepository.Delete(id);
             return RedirectToAction("Index");
         }
     }

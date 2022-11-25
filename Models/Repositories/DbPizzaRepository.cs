@@ -43,12 +43,7 @@ namespace la_mia_pizzeria_static.Models.Repositories
             PizzaForm formData = new PizzaForm();
             formData.Pizza = new Pizza();
             formData.Categories = categoryRepository.Get();
-            formData.Ingredients = new List<SelectListItem>();
-            List<Ingredient> IngredientsList = ingredientRepository.Get();
-            foreach (Ingredient ingredient in IngredientsList)
-            {
-                formData.Ingredients.Add(new SelectListItem(ingredient.Name, ingredient.Id.ToString()));
-            }
+            formData.Ingredients = ingredientRepository.SelectList();
 
             return formData;
         }
@@ -58,11 +53,7 @@ namespace la_mia_pizzeria_static.Models.Repositories
         {
             formData.Categories = categoryRepository.Get();
             formData.Ingredients = new List<SelectListItem>();
-            List<Ingredient> IngredientsList = ingredientRepository.Get();
-            foreach (Ingredient ingredient in IngredientsList)
-            {
-                formData.Ingredients.Add(new SelectListItem(ingredient.Name, ingredient.Id.ToString()));
-            }
+            
 
             return formData;
         }
