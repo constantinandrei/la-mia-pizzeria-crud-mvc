@@ -12,7 +12,8 @@ namespace la_mia_pizzeria_static.Models.Repositories
 
         public ListPizzaRepository()
         {
-            static _pizzas = new List<Pizza>();
+            if (_pizzas == null)
+                _pizzas = new List<Pizza>();
             ingredientRepository = new ListIngredientRepository();
             categoryRepository = new ListCategoryRepository();
         }
