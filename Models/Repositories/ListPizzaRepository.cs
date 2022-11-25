@@ -1,57 +1,110 @@
-﻿using la_mia_pizzeria_static.Models.Form;
+﻿using la_mia_pizzeria_static.Data;
+using la_mia_pizzeria_static.Models.Form;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace la_mia_pizzeria_static.Models.Repositories
 {
     public class ListPizzaRepository : IDbPizzaRepository
     {
+        private DbIngredientRepository ingredientRepository;
+        private DbCategoryRepository categoryRepository;
+        private List<Pizza> _pizzas;
+
+        public ListPizzaRepository()
+        {
+            _pizzas = new List<Pizza>();
+            ingredientRepository = new DbIngredientRepository();
+            categoryRepository = new DbCategoryRepository();
+        }
         public void Create(Pizza pizza, List<int> selectedIngredients)
         {
-            throw new NotImplementedException();
+            pizza.Category = categoryRepository.Get(pizza.CategoryId);
+            pizza.Ingredients = new List<Ingredient>();
+            foreach (int ingredientId in selectedIngredients)
+            {
+                pizza.Ingredients.Add(ingredientRepository.Get(ingredientId));
+            }
+            pizza.Id = _pizzas.Last().Id + 1;
+            _pizzas.Add(pizza);
         }
 
         public PizzaForm CreateForm()
         {
-            throw new NotImplementedException();
+            PizzaForm formData = new PizzaForm();
+            formData.Pizza = new Pizza();
+            formData.Categories = categoryRepository.Get();
+            formData.Ingredients = ingredientRepository.SelectList();
+
+            return formData;
         }
 
         public PizzaForm CreateForm(int id)
         {
-            throw new NotImplementedException();
+            PizzaForm formData = CreateForm();
+            formData.Pizza = Get(id);
+            List<Ingredient> IngredientsList = ingredientRepository.Get();
+            foreach (Ingredient ingredient in IngredientsList)
+            {
+                bool selected = formData.Pizza.Ingredients.Any(i => i.Id == ingredient.Id);
+                formData.Ingredients.Add(new SelectListItem(ingredient.Name, ingredient.Id.ToString(), selected));
+            }
+            return formData;
         }
 
         public PizzaForm CreateForm(PizzaForm formData)
         {
-            throw new NotImplementedException();
+            formData.Categories = categoryRepository.Get();
+            formData.Ingredients = new List<SelectListItem>();
+
+
+            return formData;
         }
 
         public void Delete(Pizza pizza)
         {
-            throw new NotImplementedException();
+            Pizza toDelete = Get(pizza.Id);
+            _pizzas.Remove(toDelete);
         }
 
         public bool Exists(int id)
         {
-            throw new NotImplementedException();
+            return _pizzas.Any(p => p.Id == id);
         }
 
         public List<Pizza> Get()
         {
-            throw new NotImplementedException();
+            return _pizzas;
         }
 
         public Pizza Get(int id)
         {
-            throw new NotImplementedException();
+            return _pizzas.FirstOrDefault(p => p.Id == id);
         }
 
         public List<Pizza> GetByCategoryId(int categoryId)
         {
-            throw new NotImplementedException();
+            return _pizzas.Where(p => p.CategoryId == categoryId).ToList();
         }
 
         public void Update(Pizza updatedPizza, List<int> selectedIngredients)
         {
-            throw new NotImplementedException();
+            Pizza pizza = Get(updatedPizza.Id);
+            pizza.Name = updatedPizza.Name;
+            pizza.Image = updatedPizza.Image;
+            pizza.Price = updatedPizza.Price;
+            pizza.Description = updatedPizza.Description;
+            pizza.CategoryId = updatedPizza.CategoryId;
+            if (pizza.Ingredients != null)
+                pizza.Ingredients.Clear();
+            ;
+            if (selectedIngredients != null)
+            {
+                foreach (int ingredientId in selectedIngredients)
+                {
+                    pizza.Ingredients.Add(ingredientRepository.Get(ingredientId));
+
+                }
+            }
         }
     }
 }
