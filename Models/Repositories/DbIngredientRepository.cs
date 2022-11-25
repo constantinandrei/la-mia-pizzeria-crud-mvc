@@ -7,7 +7,7 @@ namespace la_mia_pizzeria_static.Models.Repositories
         private PizzaDbContext db;
         public DbIngredientRepository()
         {
-            db = new PizzaDbContext();
+            db = PizzaDbContext.GetInstance;
         }
 
         public List<Ingredient> Get()
@@ -15,5 +15,9 @@ namespace la_mia_pizzeria_static.Models.Repositories
            return db.Ingredients.ToList();
         }
 
+        public Ingredient Get(int id)
+        {
+            return db.Ingredients.Where(i => i.Id == id).FirstOrDefault();
+        }
     }
 }

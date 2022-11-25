@@ -11,7 +11,7 @@ namespace la_mia_pizzeria_static.Controllers
 
         public CategoryController()
         {
-            db = new PizzaDbContext();
+            db = PizzaDbContext.GetInstance;
         }
         public IActionResult Index()
         {
