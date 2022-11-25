@@ -13,37 +13,40 @@
         }
         public void Create(Category category)
         {
-            throw new NotImplementedException();
+            _categories.Add(category);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            Category category = Get(id);
+            _categories.Remove(category);
         }
 
         public bool Exists(int id)
         {
-            throw new NotImplementedException();
+            return _categories.Any(c => c.Id == id);    
         }
 
         public List<Category> Get()
         {
-            throw new NotImplementedException();
+            return _categories;
         }
 
         public Category Get(int id)
         {
-            throw new NotImplementedException();
+            return _categories.FirstOrDefault(c => c.Id == id);
         }
 
         public bool HasConstraint(int id)
         {
-            throw new NotImplementedException();
+            //da implementare, intanto metto sempre vero
+            return true;
         }
 
         public void Update(Category category)
         {
-            throw new NotImplementedException();
+            Category tuUpdate = Get(category.Id);
+            tuUpdate.Name = category.Name;
         }
     }
 }
