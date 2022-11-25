@@ -12,19 +12,38 @@ namespace la_mia_pizzeria_static.Models.Repositories
 
         public ListPizzaRepository()
         {
-            if (_pizzas == null)
-                _pizzas = new List<Pizza>();
             ingredientRepository = new ListIngredientRepository();
             categoryRepository = new ListCategoryRepository();
+            if (_pizzas == null)
+            {
+                _pizzas = new List<Pizza>();
+
+
+                Pizza pizza = new Pizza();
+                pizza.Id = 1;
+                pizza.Price = 7.5;
+                pizza.Description = "ha dka ala dha ds";
+                pizza.Category = categoryRepository.Get(1);
+                pizza.Ingredients = new List<Ingredient>();
+                pizza.Ingredients.Add(ingredientRepository.Get(1));
+                pizza.Image = "https://picsum.photos/200/300";
+                _pizzas.Add(pizza);
+            }
+                
+            
         }
         public void Create(Pizza pizza, List<int> selectedIngredients)
         {
             pizza.Category = categoryRepository.Get(pizza.CategoryId);
             pizza.Ingredients = new List<Ingredient>();
-            foreach (int ingredientId in selectedIngredients)
+            if (selectedIngredients != null)
             {
-                pizza.Ingredients.Add(ingredientRepository.Get(ingredientId));
+                foreach (int ingredientId in selectedIngredients)
+                {
+                    pizza.Ingredients.Add(ingredientRepository.Get(ingredientId));
+                }
             }
+            
             if (_pizzas.Count() == 0)
             {
                 pizza.Id = 1;

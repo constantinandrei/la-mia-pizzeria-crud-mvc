@@ -7,12 +7,16 @@ namespace la_mia_pizzeria_static.Models.Repositories
         private static List<Ingredient> _ingredients;
         public ListIngredientRepository()
         {
-            _ingredients = new List<Ingredient>();
-            _ingredients.Add(new Ingredient(1, "Farina"));
-            _ingredients.Add(new Ingredient(2, "Pomodoro"));
-            _ingredients.Add(new Ingredient(3, "Mozzarella"));
-            _ingredients.Add(new Ingredient(4, "Mortadella"));
-            _ingredients.Add(new Ingredient(5, "Amore"));
+            if (_ingredients == null)
+            {
+                _ingredients = new List<Ingredient>();
+                _ingredients.Add(new Ingredient(1, "Farina"));
+                _ingredients.Add(new Ingredient(2, "Pomodoro"));
+                _ingredients.Add(new Ingredient(3, "Mozzarella"));
+                _ingredients.Add(new Ingredient(4, "Mortadella"));
+                _ingredients.Add(new Ingredient(5, "Amore"));
+            }
+            
 
         }
         public List<Ingredient> Get()
