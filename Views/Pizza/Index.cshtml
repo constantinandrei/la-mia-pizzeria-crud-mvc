@@ -23,6 +23,14 @@
                                     @pizza.Description
                                 </p>
                                 <p class="card-text">
+                                    @if (pizza.Ingredients != null){
+                                        <span>Lista Ingredienti: </span>
+                                        foreach (Ingredient ingredient in pizza.Ingredients){
+                                            <span>@ingredient.Name </span>
+                                        }
+                                    }
+                                </p>
+                                <p class="card-text">
                                     Prezzo: @pizza.Price €
                                 </p>
                                 <div>

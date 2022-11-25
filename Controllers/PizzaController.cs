@@ -1,6 +1,7 @@
 ﻿using la_mia_pizzeria_static.Data;
 using la_mia_pizzeria_static.Models;
 using la_mia_pizzeria_static.Models.Form;
+using la_mia_pizzeria_static.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,31 +14,35 @@ namespace la_mia_pizzeria_static.Controllers
     
     public class PizzaController : Controller
     {
-        private PizzaDbContext db;
+        //private PizzaDbContext db;
+        private DbPizzaRepository pizzaRepository;
+        private DbCategoryRepository categoryRepository;
+        private DbIngredientRepository ingredientRepository;
 
         public PizzaController()
         {
-            db = new PizzaDbContext();
+            //db = new PizzaDbContext();
+            pizzaRepository = new DbPizzaRepository();
+            categoryRepository = new DbCategoryRepository();
+            ingredientRepository = new DbIngredientRepository();
         }
         public IActionResult Index()
         {
-           
-            List<Pizza> Pizze = db.Pizzas.Include(p => p.Category).ToList();
             ViewData["Title"] = "Todi Pizza";
-            return View(Pizze);
+            return View(pizzaRepository.Get());
         }
         // filtro per pizze con categoria
         public IActionResult CategoryFilter(int categoryId)
         {
 
-            List<Pizza> Pizze = db.Pizzas.Where(p => p.CategoryId == categoryId).Include(p => p.Category).ToList();
+            List<Pizza> Pizze = pizzaRepository.GetByCategoryId(categoryId);
             ViewData["Title"] = "Todi Pizza";
             return View("Index", Pizze);
         }
 
         public IActionResult Detail(int id)
         {
-            Pizza pizza = db.Pizzas.Where(p => p.Id == id).Include(p => p.Category).FirstOrDefault();
+            Pizza pizza = pizzaRepository.Get(id);
             ViewData["Title"] = "Todi Pizza | " + pizza.Name;
             return View(pizza);
         }
@@ -45,9 +50,9 @@ namespace la_mia_pizzeria_static.Controllers
         {
             PizzaForm formData = new PizzaForm();
             formData.Pizza = new Pizza();
-            formData.Categories = db.Categories.ToList();
+            formData.Categories = categoryRepository.Get();
             formData.Ingredients = new List<SelectListItem>();
-            List<Ingredient> IngredientsList = db.Ingredients.ToList();
+            List<Ingredient> IngredientsList = ingredientRepository.Get();
             foreach(Ingredient ingredient in IngredientsList)
             {
                 formData.Ingredients.Add(new SelectListItem(ingredient.Name, ingredient.Id.ToString()));
@@ -60,9 +65,9 @@ namespace la_mia_pizzeria_static.Controllers
         {
             if (!ModelState.IsValid)
             {
-                formData.Categories = db.Categories.ToList();
+                formData.Categories = categoryRepository.Get();
                 formData.Ingredients = new List<SelectListItem>();
-                List<Ingredient> IngredientsList = db.Ingredients.ToList();
+                List<Ingredient> IngredientsList = ingredientRepository.Get();
                 foreach (Ingredient ingredient in IngredientsList)
                 {
                     formData.Ingredients.Add(new SelectListItem(ingredient.Name, ingredient.Id.ToString()));
