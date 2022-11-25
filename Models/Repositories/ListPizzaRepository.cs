@@ -6,15 +6,15 @@ namespace la_mia_pizzeria_static.Models.Repositories
 {
     public class ListPizzaRepository : IDbPizzaRepository
     {
-        private DbIngredientRepository ingredientRepository;
-        private DbCategoryRepository categoryRepository;
-        private List<Pizza> _pizzas;
+        private IDbIngredientRepository ingredientRepository;
+        private IDbCategoryRepository categoryRepository;
+        private static List<Pizza> _pizzas;
 
         public ListPizzaRepository()
         {
-            _pizzas = new List<Pizza>();
-            ingredientRepository = new DbIngredientRepository();
-            categoryRepository = new DbCategoryRepository();
+            static _pizzas = new List<Pizza>();
+            ingredientRepository = new ListIngredientRepository();
+            categoryRepository = new ListCategoryRepository();
         }
         public void Create(Pizza pizza, List<int> selectedIngredients)
         {
@@ -24,7 +24,14 @@ namespace la_mia_pizzeria_static.Models.Repositories
             {
                 pizza.Ingredients.Add(ingredientRepository.Get(ingredientId));
             }
-            pizza.Id = _pizzas.Last().Id + 1;
+            if (_pizzas.Count() == 0)
+            {
+                pizza.Id = 1;
+            } else
+            {
+                pizza.Id = _pizzas.Last().Id + 1;
+            }
+            
             _pizzas.Add(pizza);
         }
 

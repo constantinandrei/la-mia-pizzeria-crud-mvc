@@ -4,7 +4,7 @@ namespace la_mia_pizzeria_static.Models.Repositories
 {
     public class ListIngredientRepository : IDbIngredientRepository
     {
-        private List<Ingredient> _ingredients;
+        private static List<Ingredient> _ingredients;
         public ListIngredientRepository()
         {
             _ingredients = new List<Ingredient>();

@@ -15,11 +15,11 @@ namespace la_mia_pizzeria_static.Controllers
     public class PizzaController : Controller
     {
      
-        private DbPizzaRepository pizzaRepository;
+        private IDbPizzaRepository pizzaRepository;
 
         public PizzaController()
         {
-            pizzaRepository = new DbPizzaRepository();
+            pizzaRepository = new ListPizzaRepository();
         }
         public IActionResult Index()
         {

@@ -2,7 +2,7 @@
 {
     public class ListCategoryRepository : IDbCategoryRepository
     {
-        List<Category> _categories;
+        static List<Category> _categories;
         public ListCategoryRepository()
         {
             _categories = new List<Category>();

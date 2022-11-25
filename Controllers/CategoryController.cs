@@ -8,11 +8,11 @@ namespace la_mia_pizzeria_static.Controllers
 {
     public class CategoryController : Controller
     {
-        private DbCategoryRepository categoryRepository;
+        private IDbCategoryRepository categoryRepository;
 
         public CategoryController()
         {
-          categoryRepository = new DbCategoryRepository();
+          categoryRepository = new ListCategoryRepository();
         }
         public IActionResult Index()
         {
