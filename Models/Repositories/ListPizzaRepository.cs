@@ -69,8 +69,8 @@ namespace la_mia_pizzeria_static.Models.Repositories
         {
             PizzaForm formData = CreateForm();
             formData.Pizza = Get(id);
-            List<Ingredient> IngredientsList = ingredientRepository.Get();
-            foreach (Ingredient ingredient in IngredientsList)
+            formData.Ingredients.Clear();
+            foreach (Ingredient ingredient in ingredientRepository.Get())
             {
                 bool selected = formData.Pizza.Ingredients.Any(i => i.Id == ingredient.Id);
                 formData.Ingredients.Add(new SelectListItem(ingredient.Name, ingredient.Id.ToString(), selected));
